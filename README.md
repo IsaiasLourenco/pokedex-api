@@ -15,7 +15,7 @@ Aplicativo feito com base na Quest de React Avançado do curso DevQuest DevEmDob
     - Verificar se ao clicar no Card do Pokémon, ele entra nos detalhes de cada Pokémon;
     - Verificar se ao clicar no botão "Back" nos detalhes dos Pokémons, volta para a página inicial;
     - Verificar o botão "Back to ten" que aparece só após ser clicado pela primeira vez o botão "Load More", para que a página inicial volte a ter apenas 10 Pokémons.
-- 10/03/2025 - Corrigida a responsividade. Agora a apresentação dos cards dos Pokémons fica perfeita tanto em telas grandes, desktops 💻, quanto em telas monile... 📱
+- 10/03/2025 - Corrigida a responsividade. Agora a apresentação dos cards dos Pokémons fica perfeita tanto em telas grandes, desktops 💻, quanto em telas mobile... 📱
 
 ## Linguagens/Ferramentas utilizadas
 
