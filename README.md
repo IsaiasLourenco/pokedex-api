@@ -13,7 +13,7 @@ Aplicativo feito com base na Quest de React Avançado do curso DevQuest DevEmDob
 
 - React + Vite ➡ por seu desempenho e experiência. Compilação e refresh mais rápido.
 - React-router-dom ➡ Navegação interna fácil e em Single Page Application - SAP
-- React styled-components ➡ CSS segregadado facilitando o entendimento e a  manutenção.
+- React styled-components ➡ CSS segregando arquivos e facilitando o entendimento e a  manutenção.
 - React-context-API ➡ para utilização do toggler, mudança do tema claro e escuro.
 
 ## Decisões tomadas durante o desenvolvimento, e o porquê de cada uma delas
@@ -28,7 +28,7 @@ Aplicativo feito com base na Quest de React Avançado do curso DevQuest DevEmDob
 ## Comandos para rodar o projeto em um computador local.
 
 ▫ Fazer o GitClone do repositório<br>
-▫▫ git clone https://api.github.isaiaslourenco<br>
+▫▫ git clone https://github.com/IsaiasLourenco/pokedex-api.git<br>
 ▫▫▫ Verifique se o Node.js está instalado<br>
 ▫▫▫▫ node -v<br>
 ▫▫▫▫▪ Instalar as dependências do projeto<br>
