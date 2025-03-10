@@ -9,10 +9,11 @@ Aplicativo feito com base na Quest de React Avançado do curso DevQuest DevEmDob
 - Nessa página inicial também temos o botão "Light Mode", pois o projeto se inicia em tema escuro. Ao clicar nesse botão, o app fica com tema claro, e o botão passa a chamar "Dark Mode", para que ele volte ao tema escuro.
 - Cada Pokémon se apresenta como um card, e ao clicar nesse card, você tem os detalhes de cada, com seu nome, sua imagem, movimentos, habilidades, e com o texto descritivo de cada habiliudade, além do tipo do Pokémon, e um botão pra voltar à página principal.
 - 10/03/2025 ACRESCENTADO O BOTÃO "Back to ten", que aparece depois que o botão "Load More" é clicado pela primeira vez, para que não seja necessário dar o F5 para que o sistema volte a ter só 10 Pokémons.
-- 10/03/2025 Criado também os test cases para testar funcinalidades
+- 10/03/2025 Criado também os test cases para testar funcionalidades:
     - Alternância entre os modos claro e escuro;
     - Verificar se o botão "Load More" acrescenta mais dez Pokémons à lista inicial;
     - Verificar se ao clicar no Card do Pokémon, ele entra nos detalhes de cada Pokémon;
+    - Verificar se ao clicar no botão "Back" nos detalhes dos Pokémons, volta para a página inicial;
     - Verificar o botão "Back to ten" que aparece só após ser clicado pela primeira vez o botão "Load More", para que a página inicial volte a ter apenas 10 Pokémons.
 
 ## Linguagens/Ferramentas utilizadas
