@@ -40,6 +40,7 @@ Aplicativo feito com base na Quest de React Avançado do curso DevQuest DevEmDob
 ## Muito feliz em estar chegando ao final do Front End Developer
 
 - Agradecimentos ao pessoal do DevEmDobro
+- Agradecimentos ao Pablo Viana por ajudar a entender alguns problemas da versão 18 e 19 do React https://github.com/pablovianas
 
 ## Reposítório e Linkedin
 
