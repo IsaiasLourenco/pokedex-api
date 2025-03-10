@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom"; // Importando useNavigate para navegação
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { AbilityItem } from "../styles/GlobalStyles"; // Importando estilos globais
