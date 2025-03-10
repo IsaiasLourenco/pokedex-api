@@ -79,4 +79,16 @@ const PokemonGrid = styled.div`
   width: 100%;
   max-width: 1200px; /* Limita a largura da grid */
   justify-items: center; /* Centraliza os cards na grid */
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(4, 1fr); /* 4 colunas em telas menores */
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr); /* 2 colunas em telas ainda menores */
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, 1fr); /* 1 coluna em telas muito pequenas */
+  }
 `;

@@ -111,6 +111,9 @@ export const AbilityItem = styled.li`
     border-radius: 5px;
     text-align: center; /* Texto da descrição centralizado */
   }
+
 `;
+
+
 
 export default GlobalStyles;
