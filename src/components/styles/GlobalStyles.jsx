@@ -97,7 +97,7 @@ export const AbilityItem = styled.li`
   
   strong {
     color: ${({ theme }) => theme.abilityText}; /* Cor do nome da habilidade */
-    font-size: 1.1rem;
+    font-size: 1rem;
     display: block;
   }
   
@@ -105,7 +105,7 @@ export const AbilityItem = styled.li`
     display: block;
     margin-top: 5px;
     color: ${({ theme }) => theme.abilityDescriptionText}; /* Texto da descrição */
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     background-color: ${({ theme }) => theme.abilityDescriptionBackground}; /* Fundo da descrição */
     padding: 5px;
     border-radius: 5px;

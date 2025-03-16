@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 const PokemonCard = ({ name, url }) => {
     const id = url.split("/")[url.split("/").length - 2];
-    const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+    const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${id}.gif`;
 
     return (
         <Card>
@@ -22,8 +22,12 @@ const Card = styled.div`
   border: 1px solid gray;
   padding: 10px;
   text-align: center;
+  width: 120px;
+  height: 120px;
 
   img {
-    width: 100px;
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
   }
 `;
