@@ -162,6 +162,12 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  h1{
+    @media (max-width: 480px){
+    font-size: 28px;
+  }
+  }
 `;
 
 const PokemonGrid = styled.div`
@@ -172,6 +178,12 @@ const PokemonGrid = styled.div`
   width: 100%;
   max-width: 1200px;
   justify-items: center;
+
+  @media (max-width: 480px) {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 `;
 
 const Header = styled.div`
