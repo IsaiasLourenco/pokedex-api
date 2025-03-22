@@ -8,36 +8,51 @@ import { useLocation } from "react-router-dom";
 import Select from "react-select";
 
 const Home = () => {
-  const [pokemons, setPokemons] = useState([]);
-  const [offset, setOffset] = useState(0);
-  const [pokemonTypes, setPokemonTypes] = useState([]);
-  const [selectedType, setSelectedType] = useState("");
-  const [showBackToTen, setShowBackToTen] = useState(false);
-  const { theme } = useContext(ThemeContext);
-  const location = useLocation();
+  const [pokemons, setPokemons] = useState([]); //armazana a lista de pokemons
+  const [offset, setOffset] = useState(0); //posição de onde os Pokémons serão carregados na API
+  const [pokemonTypes, setPokemonTypes] = useState([]); //armazenará a lista de pokemons por tipo
+  const [selectedType, setSelectedType] = useState(""); // armazena o tipo de pokemon escolhido
+  const [showBackToTen, setShowBackToTen] = useState(false); //Botão volta para 10 - inicia invisível
+  const { theme } = useContext(ThemeContext); // para controlar o tem
+  const location = useLocation(); //acessa informações sobre a localização atual da URL
 
   useEffect(() => {
     fetchPokemonTypes();
   }, []);
 
   useEffect(() => {
-    const savedType = location.state?.selectedType || localStorage.getItem("selectedType") || "";
-    const savedOffset = (location.state?.offset ?? parseInt(localStorage.getItem("offset"), 10)) || 0;
-
-
+    // Sempre reseta o localStorage ao recarregar a página ou no primeiro carregamento
     localStorage.removeItem("selectedType");
     localStorage.removeItem("offset");
 
-    setSelectedType(savedType);
-    setOffset(savedOffset);
-
-    if (savedType) {
-      fetchPokemonsByType(savedType, savedOffset);
-    } else {
-      fetchPokemons(savedOffset);
-    }
+    // Estado inicial padrão para "All Types"
+    setSelectedType(""); // Garante o estado inicial como "All Types"
+    setOffset(0); // Reseta o offset inicial
+    fetchPokemons(0); // Carrega os primeiros 10 Pokémon
   }, []);
 
+  // Salva o estado no localStorage ao navegar
+  useEffect(() => {
+    localStorage.setItem("selectedType", selectedType);
+    localStorage.setItem("offset", offset.toString());
+  }, [selectedType, offset]);
+
+  // Função para buscar Pokémon sem filtro de tipo
+  const fetchPokemons = async (newOffset) => {
+    try {
+      const response = await axios.get(
+        `https://pokeapi.co/api/v2/pokemon?limit=10&offset=${newOffset}`
+      );
+      setPokemons((prev) => (newOffset === 0 ? response.data.results : [...prev, ...response.data.results]));
+      setOffset(newOffset + 10);
+      // Exibe o botão "Back to Ten" se não estiver no início
+      if (newOffset > 0) setShowBackToTen(true);
+    } catch (error) {
+      console.error("Erro ao carregar os Pokémons:", error);
+    }
+  };
+
+  // Função para buscar tipos de Pokémon e seus ícones  
   const fetchPokemonTypes = async () => {
     try {
       const response = await axios.get("https://pokeapi.co/api/v2/type");
@@ -60,19 +75,7 @@ const Home = () => {
     }
   };
 
-  const fetchPokemons = async (newOffset) => {
-    try {
-      const response = await axios.get(
-        `https://pokeapi.co/api/v2/pokemon?limit=10&offset=${newOffset}`
-      );
-      setPokemons((prev) => (newOffset === 0 ? response.data.results : [...prev, ...response.data.results]));
-      setOffset(newOffset + 10);
-      if (newOffset > 0) setShowBackToTen(true);
-    } catch (error) {
-      console.error("Erro ao carregar os Pokémons:", error);
-    }
-  };
-
+  // Função para buscar Pokémon por tipo
   const fetchPokemonsByType = async (type, newOffset = 0) => {
     try {
       const response = await axios.get(`https://pokeapi.co/api/v2/type/${type}`);
@@ -81,13 +84,16 @@ const Home = () => {
         .map((p) => p.pokemon);
       setPokemons((prev) => (newOffset === 0 ? pokemonsOfType : [...prev, ...pokemonsOfType]));
       setOffset(newOffset + 10);
+      // Exibe o botão "Back to Ten" se não estiver no início
       if (newOffset > 0) setShowBackToTen(true);
     } catch (error) {
       console.error("Erro ao carregar Pokémons por tipo:", error);
     }
   };
 
+
   const handleTypeChange = (selectedOption) => {
+    console.log(selectedType)
     const type = selectedOption ? selectedOption.value : "";
     setSelectedType(type);
     setOffset(0);
@@ -97,6 +103,51 @@ const Home = () => {
     } else {
       fetchPokemons(0);
     }
+  };
+
+  const loadMorePokemons = () => {
+    console.log(selectedType)
+    const newOffset = offset + 10; // Ajusta o incremento do offset se necessário
+    setOffset(newOffset); // Atualiza o offset no estado
+
+    // Atualiza o offset no LocalStorage
+    localStorage.setItem("offset", newOffset);
+
+
+    // Se um tipo foi selecionado, carrega mais Pokémons desse tipo
+    if (selectedType) {
+      fetchPokemonsByType(selectedType, newOffset);
+    } else {
+      // Caso contrário, carrega mais Pokémons sem filto
+      fetchPokemons(newOffset);
+    }
+  };
+
+  // Carregar mais Pokémon
+  useEffect(() => {
+    console.log(selectedType)
+    // Carregar o tipo selecionado e o offset do localStorage
+    const storedType = localStorage.getItem("selectedType") || "";
+    const storedOffset = parseInt(localStorage.getItem("offset")) || 0;
+
+    setSelectedType(storedType);
+    setOffset(storedOffset);
+
+    if (storedType) {
+      fetchPokemonsByType(storedType, storedOffset);
+    } else {
+      fetchPokemons(storedOffset);
+    }
+  }, []);
+
+  // Voltar para os primeiros 10 Pokémon
+  const backToTen = () => {
+    if (selectedType) {
+      fetchPokemonsByType(selectedType, 0);
+    } else {
+      fetchPokemons(0);
+    }
+    setShowBackToTen(false); // Oculta o botão após voltar para os 10 primeiros
   };
 
   const customStyles = {
@@ -193,4 +244,4 @@ const Header = styled.div`
   width: 100%;
   max-width: 1200px;
   margin-bottom: 20px;
-`;
+  `;
