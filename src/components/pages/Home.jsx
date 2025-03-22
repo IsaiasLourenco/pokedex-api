@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { ThemeContext } from "../context/ThemeContext";
 import ThemeToggler from "../ThemeToggler";
 import { useLocation } from "react-router-dom";
-import Select from "react-select"; // IMPORTAÇÃO DO REACT-SELECT
+import Select from "react-select";
 
 const Home = () => {
   const [pokemons, setPokemons] = useState([]);
