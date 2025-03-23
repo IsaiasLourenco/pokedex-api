@@ -33,7 +33,7 @@ const Home = () => {
       setSelectedType(""); // "All Types"
       setOffset(0);
       fetchPokemons(0); // Carregar os primeiros 10 Pokémon
-      
+      isFirstLoadRef.current = false;
     } else {
       console.log("Não é o primeiro carregamento", isFirstLoadRef);
       // Caso contrário, use os valores salvos no localStorage
