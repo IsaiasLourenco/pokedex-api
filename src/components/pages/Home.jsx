@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import PokemonCard from "../../components/PokemonCard";
 import styled from "styled-components";
 import { ThemeContext } from "../context/ThemeContext";
+import { useAppContext } from "../context/AppContext";
 import ThemeToggler from "../ThemeToggler";
 import { useLocation } from "react-router-dom";
 import Select from "react-select";
@@ -14,7 +15,7 @@ const Home = () => {
   const [pokemonTypes, setPokemonTypes] = useState([]); //armazenará a lista de pokemons por tipo
   const [selectedType, setSelectedType] = useState(""); // armazena o tipo de pokemon escolhido
   const [showBackToTen, setShowBackToTen] = useState(false); //Botão volta para 10 - inicia invisível
-  const isFirstLoadRef = useRef(true);
+  const { isFirstLoad, setIsFirstLoad } = useAppContext(); // Usando o contexto global
 
   useEffect(() => {
     fetchPokemonTypes();
@@ -25,17 +26,17 @@ const Home = () => {
     const savedType = localStorage.getItem("selectedType");
     const savedOffset = localStorage.getItem("offset");
 
-    if (isFirstLoadRef.current) {
-      console.log("Primeiro carregamento", isFirstLoadRef);
+    if (isFirstLoad) {
+      console.log("Primeiro carregamento", isFirstLoad);
       // Resetar o localStorage e o offset
       localStorage.removeItem("selectedType");
       localStorage.removeItem("offset");
       setSelectedType(""); // "All Types"
       setOffset(0);
       fetchPokemons(0); // Carregar os primeiros 10 Pokémon
-      isFirstLoadRef.current = false;
+      setIsFirstLoad(false); //Atualiza o estado global
     } else {
-      console.log("Não é o primeiro carregamento", isFirstLoadRef);
+      console.log("Não é o primeiro carregamento", isFirstLoad);
       // Caso contrário, use os valores salvos no localStorage
       setSelectedType(savedType || "");
       setOffset(parseInt(savedOffset, 10) || 0);
