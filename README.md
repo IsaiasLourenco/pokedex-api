@@ -27,11 +27,11 @@ Aplicativo feito com base na Quest de React Avançado do curso DevQuest DevEmDob
 
 ## Linguagens/Ferramentas utilizadas
 
-- React + Vite ➡ por seu desempenho e experiência. Compilação e refresh mais rápido.
-- React-router-dom ➡ Navegação interna fácil e em Single Page Application - SAP
-- React styled-components ➡ CSS segregando arquivos e facilitando o entendimento e a  manutenção.
-- React-context ➡ para utilização do toggler, mudança do tema claro e escuro.
-- React Axios ➡ Para busca e consumo da API. 
+- React + Vite              ➡ por seu desempenho e experiência. Compilação e refresh mais rápido.
+- React-router-dom          ➡ Navegação interna fácil e em Single Page Application - SAP
+- React styled-components   ➡ CSS segregando arquivos e facilitando o entendimento e a  manutenção.
+- React-context             ➡ para utilização do toggler, mudança do tema claro e escuro.
+- React Axios               ➡ Para busca e consumo da API. 
 
 ## Decisões tomadas durante o desenvolvimento, e o porquê de cada uma delas
 
@@ -40,7 +40,11 @@ Aplicativo feito com base na Quest de React Avançado do curso DevQuest DevEmDob
 3️⃣ Navegação interna entre as páginas;<br>
 4️⃣ Criação dos exports de cada arquivo e import de tais, ligando todas as páginas, ou arquivos, dentro do projeto;<br>
 5️⃣ Finalização dos arquivos e ligação entre eles, navegação entre a página principal e a página dos detalhes dos Pokémons;<br>
-6️⃣ Criação e aplicação dos estilos.
+6️⃣ Criação e aplicação dos estilos;<br>
+7️⃣ Refatoração para melhor compreensão e análise do código Home.jsx;<br>
+8️⃣ Melhorias no select de Pokémon por tipo, com a imagem de cada tipo;<br>
+9️⃣ Melhorias nos useEffects parar melhor re-renderização na troca de tipos de Pokémons, ao chamar mais 10 e ao voltar aos 10 iniciais;
+🔟 Melhorias no useEffects e na busca por Pokemõns e Pokemóns por tipo para guardar a quantidade de Pokemóns no localStorage e mostrar a mesma quantia na re-renderização.
 
 ## Comandos para rodar o projeto em um computador local.
 
