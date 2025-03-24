@@ -27,21 +27,28 @@ const Home = () => {
       console.log("Rodando useEffect pela primeira vez");
       localStorage.removeItem("selectedType");
       localStorage.removeItem("offset");
-      setSelectedType("");
+      setSelectedType(""); // "All Types"
       setOffset(0);
-      fetchPokemons(0);
-      setIsFirstLoad(false);
+      if (!localStorage.getItem("offset")) { // Garante que só chama se não houver offset salvo
+        fetchPokemons(0);
+      }
+      //fetchPokemons(0); // Carregar os primeiros 10 Pokémon
+      setIsFirstLoad(false); //Atualiza o estado global
     } else {
       const savedType = localStorage.getItem("selectedType");
       const savedOffset = localStorage.getItem("offset");
 
       console.log("Valores do localStorage:", { savedType, savedOffset });
       console.log("Valores do localStorage:", { selectedType, offset });
-      
+
+      setSelectedType(savedType || "");
+      const offSetUpdated = parseInt(savedOffset);
+  
+      setOffset(offSetUpdated);
       if (savedType) {
-        fetchPokemonsByType(savedType, offset);
+        fetchPokemonsByType(savedType, offSetUpdated);
       } else {
-        fetchPokemons(offset);
+        fetchPokemons(offSetUpdated);
       }
     }
   }, []); // Aqui o efeito só vai rodar uma vez, no primeiro carregamento do componente

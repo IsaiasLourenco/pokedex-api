@@ -23,7 +23,7 @@ Aplicativo feito com base na Quest de React Avançado do curso DevQuest DevEmDob
     - 4. O Switcher vai ser responsável por trocar o tema, Dark e Light, aberto a novos temas no futuro, como o tema do Sistema Operacional em atual uso;
     - 5. Dentro dos cards carregados na tela, ao clicar em uma dessas telas, o card do Pokémon escolhido abre PokemonDetails.jsx, mostrando os detalhes desse Pokémon, e o detalhe agora está na próxima funcinalidade;
     - 6. Quando no PokemonDetails.jsx, ao clicar no botão "Back", a página Home.jsx deve voltar SEMPRE apresentando a mesma tela que existia quando o card foi clicado, ou seja, os mesmos Pokémons, por tipo, e a mesma quantia, 10 ou mais mostradas na tela inicial quando clicado o card; ESSA FUNCIONALIDADE NÃO ESTÁ CORRETA
-    - 7. O botão "Back to ten" assim como o "Back" do PokemonDetails.jsx deve voltar aos 10 primeiros mas respeitando o select de tipo. ESSA FUNCIONALIDADE NÃO ESTÁ CORRETA. Ele volta aos 10 mas não respeita o select, sempre volta os 10 "All types"
+    - 7. O botão "Back to ten" assim como o "Back" do PokemonDetails.jsx deve voltar aos 10 primeiros mas respeitando o select de tipo.
 
 ## Linguagens/Ferramentas utilizadas
 
