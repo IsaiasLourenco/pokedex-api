@@ -27,11 +27,14 @@ Aplicativo feito com base na Quest de React Avançado do curso DevQuest DevEmDob
 
 ## Linguagens/Ferramentas utilizadas
 
-- React + Vite              ➡ por seu desempenho e experiência. Compilação e refresh mais rápido.
-- React-router-dom          ➡ Navegação interna fácil e em Single Page Application - SAP
-- React styled-components   ➡ CSS segregando arquivos e facilitando o entendimento e a  manutenção.
-- React-context             ➡ para utilização do toggler, mudança do tema claro e escuro.
-- React Axios               ➡ Para busca e consumo da API. 
+| Linguagem + Library/Tool  |                       Funcionalidade                                       |
+|---------------------------|----------------------------------------------------------------------------|
+| React + Vite              | Por seu desempenho e experiência. Compilação e refresh mais rápido.        |
+| React-router-dom          | Navegação interna fácil e em Single Page Application - S.P.A.              |
+| React styled-components   | CSS segregando arquivos e facilitando o entendimento e a manutenção.       |
+| React styled-components   | Para utilização do toggler, mudança do tema claro e escuro.                |
+| React-context             | Compartilhamento de dados e estados entre componentes.                     |
+| React Axios               | Biblioteca para requisições HTTP e sonsumo de APIs.                        |
 
 ## Decisões tomadas durante o desenvolvimento, e o porquê de cada uma delas
 
@@ -43,7 +46,7 @@ Aplicativo feito com base na Quest de React Avançado do curso DevQuest DevEmDob
 6️⃣ Criação e aplicação dos estilos;<br>
 7️⃣ Refatoração para melhor compreensão e análise do código Home.jsx;<br>
 8️⃣ Melhorias no select de Pokémon por tipo, com a imagem de cada tipo;<br>
-9️⃣ Melhorias nos useEffects parar melhor re-renderização na troca de tipos de Pokémons, ao chamar mais 10 e ao voltar aos 10 iniciais;
+9️⃣ Melhorias nos useEffects parar melhor re-renderização na troca de tipos de Pokémons, ao chamar mais 10 e ao voltar aos 10 iniciais;<br>
 🔟 Melhorias no useEffects e na busca por Pokemõns e Pokemóns por tipo para guardar a quantidade de Pokemóns no localStorage e mostrar a mesma quantia na re-renderização.
 
 ## Comandos para rodar o projeto em um computador local.
