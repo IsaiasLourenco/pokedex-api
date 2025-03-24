@@ -17,16 +17,40 @@ const Home = () => {
   const [showBackToTen, setShowBackToTen] = useState(false); //Botão volta para 10 - inicia invisível
   const { isFirstLoad, setIsFirstLoad } = useAppContext(); // Usando o contexto global
 
+
   useEffect(() => {
     fetchPokemonTypes();
   }, []);
 
   useEffect(() => {
+    const savedType = localStorage.getItem("selectedType");
+    const savedOffset = parseInt(localStorage.getItem("offset")) || 0;
+  
+    setOffset(savedOffset); // Garante que o offset reflita o valor salvo
+    if (isFirstLoad) {
+      if (savedType) {
+        setSelectedType(savedType);
+        fetchPokemonsByType(savedType, savedOffset);
+      } else {
+        fetchPokemons(savedOffset);
+      }
+      setIsFirstLoad(false); // Atualiza o estado global
+    } else {
+      if (savedType) {
+        fetchPokemonsByType(savedType, savedOffset);
+      } else {
+        fetchPokemons(savedOffset);
+      }
+    }
+  }, []);
+  
+
+  useEffect(() => {
 
     if (isFirstLoad) {
-      console.log("Rodando useEffect pela primeira vez");
       localStorage.removeItem("selectedType");
       localStorage.removeItem("offset");
+      localStorage.removeItem("returningFromDetails");
       setSelectedType(""); // "All Types"
       setOffset(0);
       if (!localStorage.getItem("offset")) { // Garante que só chama se não houver offset salvo
@@ -36,10 +60,7 @@ const Home = () => {
       setIsFirstLoad(false); //Atualiza o estado global
     } else {
       const savedType = localStorage.getItem("selectedType");
-      const savedOffset = localStorage.getItem("offset");
-
-      console.log("Valores do localStorage:", { savedType, savedOffset });
-      console.log("Valores do localStorage:", { selectedType, offset });
+      const savedOffset = localStorage.getItem("offset"); 
 
       setSelectedType(savedType || "");
       const offSetUpdated = parseInt(savedOffset);
@@ -56,12 +77,19 @@ const Home = () => {
   // Função para buscar Pokémon sem filtro de tipo
   const fetchPokemons = async (newOffset) => {
     try {
+
+      console.log("Chamando fetchPokemons e confirmando offset:", newOffset); // Para debug
+
       const response = await axios.get(
         `https://pokeapi.co/api/v2/pokemon?limit=10&offset=${newOffset}`
       );
+
       const newPokemons = response.data.results;
+
       setPokemons((prev) => (newOffset === 0 ? newPokemons : [...prev, ...newPokemons]));
-      setOffset(newOffset + 10);
+
+      setOffset(newOffset);
+      
       setShowBackToTen(newOffset > 0); // Atualiza corretamente
     } catch (error) {
       console.error("Erro ao carregar os Pokémons:", error);
@@ -209,8 +237,6 @@ const Home = () => {
       }}>
         Load More
       </button>
-
-      {/* {showBackToTen && <button onClick={(backToTen) => fetchPokemons(0)}>Back to Ten</button>} */}
       {showBackToTen && <button onClick={backToTen}>Back to Ten</button>}
 
     </Container>

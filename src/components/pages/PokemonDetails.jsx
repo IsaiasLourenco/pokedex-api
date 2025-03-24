@@ -25,6 +25,8 @@ const PokemonDetails = () => {
     const selectedType = localStorage.getItem("selectedType");
     const offset = localStorage.getItem("offset") || 0;
 
+    localStorage.setItem("returningFromDetails", true);
+
     // Passa o estado atual para a página inicial ao navegar de volta
     navigate("/", {
       state: {
