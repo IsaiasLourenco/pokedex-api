@@ -16,13 +16,22 @@ Aplicativo feito com base na Quest de React Avançado do curso DevQuest DevEmDob
     - Verificar se ao clicar no botão "Back" nos detalhes dos Pokémons, volta para a página inicial;
     - Verificar o botão "Back to ten" que aparece só após ser clicado pela primeira vez o botão "Load More", para que a página inicial volte a ter apenas 10 Pokémons.
 - 10/03/2025 - Corrigida a responsividade. Agora a apresentação dos cards dos Pokémons fica perfeita tanto em telas grandes, desktops 💻, quanto em telas mobile... 📱
+- 🚥 Funcinalidades atualizadas 23/03/2025<br>
+    - 1. Carrega a página → Busca os 10 primeiros Pokémons de qualquer tipo e renderiza na tela, com um botão "Load More", abaixo, um switcher para trocar de tema, claro e escuro, e um select que carrega os tipos de Pokémons;<br>
+    - 2. Ao clicar no botão "Load More", dependendo do tipo de Pokémon escolhido no select, carrega mais 10 sempre seguindo o mesmo tipo escolhido no select, e a partir do primeiro clique nesse botão, o botão "Back to Ten" aparece, sendo responsável à voltar para os 10 primeiros, sempre respeitando o select do tipo escolhido, e o botão "Load More" vai carregando mais 10, sempre do tipo selecionado, a cada clique;
+    - 3. No Select que é preenchido na renderização, você escolhe os tipos de Pokémons, um por vez, selecionando todos os Pokémons por tipo escolhido, ao clicar no botão "Load More", o carregamento de mais dez Pokémons tem que ser feito sempre respeitando o tipo escolhido;
+    - 4. O Switcher vai ser responsável por trocar o tema, Dark e Light, aberto a novos temas no futuro, como o tema do Sistema Operacional em atual uso;
+    - 5. Dentro dos cards carregados na tela, ao clicar em uma dessas telas, o card do Pokémon escolhido abre PokemonDetails.jsx, mostrando os detalhes desse Pokémon, e o detalhe agora está na próxima funcinalidade;
+    - 6. Quando no PokemonDetails.jsx, ao clicar no botão "Back", a página Home.jsx deve voltar SEMPRE apresentando a mesma tela que existia quando o card foi clicado, ou seja, os mesmos Pokémons, por tipo, e a mesma quantia, 10 ou mais mostradas na tela inicial quando clicado o card; ESSA FUNCIONALIDADE NÃO ESTÁ CORRETA
+    - 7. O botão "Back to ten" assim como o "Back" do PokemonDetails.jsx deve voltar aos 10 primeiros mas respeitando o select de tipo. ESSA FUNCIONALIDADE NÃO ESTÁ CORRETA. Ele volta aos 10 mas não respeita o select, sempre volta os 10 "All types"
 
 ## Linguagens/Ferramentas utilizadas
 
 - React + Vite ➡ por seu desempenho e experiência. Compilação e refresh mais rápido.
 - React-router-dom ➡ Navegação interna fácil e em Single Page Application - SAP
 - React styled-components ➡ CSS segregando arquivos e facilitando o entendimento e a  manutenção.
-- React-context-API ➡ para utilização do toggler, mudança do tema claro e escuro.
+- React-context ➡ para utilização do toggler, mudança do tema claro e escuro.
+- React Axios ➡ Para busca e consumo da API. 
 
 ## Decisões tomadas durante o desenvolvimento, e o porquê de cada uma delas
 

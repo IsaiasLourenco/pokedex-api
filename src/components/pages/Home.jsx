@@ -11,7 +11,7 @@ import Select from "react-select";
 const Home = () => {
   const { theme } = useContext(ThemeContext); // para controlar o tem
   const [pokemons, setPokemons] = useState([]); //armazana a lista de pokemons
-  const [offset, setOffset] = useState(0); //posição de onde os Pokémons serão carregados na API
+  const [offset, setOffset] = useState(Number(localStorage.getItem('offset')) || 0);
   const [pokemonTypes, setPokemonTypes] = useState([]); //armazenará a lista de pokemons por tipo
   const [selectedType, setSelectedType] = useState(""); // armazena o tipo de pokemon escolhido
   const [showBackToTen, setShowBackToTen] = useState(false); //Botão volta para 10 - inicia invisível
@@ -23,28 +23,25 @@ const Home = () => {
 
   useEffect(() => {
 
-    const savedType = localStorage.getItem("selectedType");
-    const savedOffset = localStorage.getItem("offset");
-
     if (isFirstLoad) {
-      console.log("Primeiro carregamento", isFirstLoad);
-      // Resetar o localStorage e o offset
+      console.log("Rodando useEffect pela primeira vez");
       localStorage.removeItem("selectedType");
       localStorage.removeItem("offset");
-      setSelectedType(""); // "All Types"
+      setSelectedType("");
       setOffset(0);
-      fetchPokemons(0); // Carregar os primeiros 10 Pokémon
-      setIsFirstLoad(false); //Atualiza o estado global
+      fetchPokemons(0);
+      setIsFirstLoad(false);
     } else {
-      console.log("Não é o primeiro carregamento", isFirstLoad);
-      // Caso contrário, use os valores salvos no localStorage
-      setSelectedType(savedType || "");
-      setOffset(parseInt(savedOffset, 10) || 0);
+      const savedType = localStorage.getItem("selectedType");
+      const savedOffset = localStorage.getItem("offset");
 
+      console.log("Valores do localStorage:", { savedType, savedOffset });
+      console.log("Valores do localStorage:", { selectedType, offset });
+      
       if (savedType) {
-        fetchPokemonsByType(savedType, parseInt(savedOffset, 10) || 0);
+        fetchPokemonsByType(savedType, offset);
       } else {
-        fetchPokemons(parseInt(savedOffset, 10) || 0);
+        fetchPokemons(offset);
       }
     }
   }, []); // Aqui o efeito só vai rodar uma vez, no primeiro carregamento do componente
@@ -104,8 +101,6 @@ const Home = () => {
   };
 
   const handleTypeChange = (selectedOption) => {
-    console.log("Selected type: ", selectedType);
-    console.log("Selected options: ", selectedOption);
 
     const type = selectedOption ? selectedOption.value : "";
     setSelectedType(type);
@@ -134,27 +129,21 @@ const Home = () => {
 
   const loadMorePokemons = () => {
     const newOffset = offset + 10;
-    setOffset(newOffset);
+    // setOffset(newOffset);
+    localStorage.setItem("offset", newOffset);
     if (selectedType === "") {
-      fetchPokemons(newOffset, true);
+      fetchPokemons(newOffset);
     } else {
-      fetchPokemonsByType(selectedType, newOffset, true);
+      fetchPokemonsByType(selectedType, newOffset );
     }
   };
 
-  useEffect(() => {
-    // Log da alteração de selectedType
-    if (selectedType) {
-      console.log("Selected type changed: ", selectedType);
-    }
-  }, [selectedType]); // Executa quando selectedType mudar
-
   // Voltar para os primeiros 10 Pokémon
   const backToTen = () => {
-    if (selectedType) {
-      fetchPokemonsByType(selectedType, 0);
-    } else {
+    if (selectedType === "") {
       fetchPokemons(0);
+    } else {
+      fetchPokemonsByType(selectedType, 0);
     }
     setShowBackToTen(false); // Oculta o botão após voltar para os 10 primeiros
   };
@@ -208,15 +197,15 @@ const Home = () => {
           <p>Loading Pokémon...</p>
         )}
       </PokemonGrid>
-      {/* <button onClick={() => fetchPokemons(offset)}>Load More</button> */}
       <button onClick={() => {
-        console.log("Botão Load More clicado!");
         loadMorePokemons();
       }}>
         Load More
       </button>
 
-      {showBackToTen && <button onClick={() => fetchPokemons(0)}>Back to Ten</button>}
+      {/* {showBackToTen && <button onClick={(backToTen) => fetchPokemons(0)}>Back to Ten</button>} */}
+      {showBackToTen && <button onClick={backToTen}>Back to Ten</button>}
+
     </Container>
   );
 };
