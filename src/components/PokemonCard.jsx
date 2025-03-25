@@ -24,6 +24,14 @@ const Card = styled.div`
   text-align: center;
   width: 120px;
   height: 120px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.6);
+  border-radius: 20px; 
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.3);
+  }
 
   img {
     width: 50px;
@@ -31,3 +39,5 @@ const Card = styled.div`
     object-fit: contain;
   }
 `;
+
+
