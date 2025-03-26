@@ -9,6 +9,7 @@ import Description from "../Description";
 const PokemonDetails = () => {
   const { id } = useParams();
   const [pokemon, setPokemon] = useState(null);
+  const [offset, setOffset] = useState(0);
   const navigate = useNavigate(); 
 
   useEffect(() => {
@@ -23,8 +24,14 @@ const PokemonDetails = () => {
   // Função para voltar à página inicial
   const handleBackClick = () => {
     const selectedType = localStorage.getItem("selectedType");
-    const offset = localStorage.getItem("offset") || 0;
 
+    const savedPokemons = JSON.parse(localStorage.getItem("pokemons")) || [];
+    if (savedPokemons.length > 0) {
+      localStorage.setItem("pokemons", JSON.stringify(savedPokemons));
+      console.log("Pokemons salvos antes de voltar", savedPokemons)
+    } else {
+      console.warn("Nenhum Pokémon encontrado pra salvar");
+    }
     // Passa o estado atual para a página inicial ao navegar de volta
     navigate("/", {
       state: {

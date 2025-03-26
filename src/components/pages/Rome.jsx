@@ -1,4 +1,3 @@
-// Importações
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import PokemonCard from "../../components/PokemonCard";
@@ -6,198 +5,252 @@ import styled from "styled-components";
 import { ThemeContext } from "../context/ThemeContext";
 import { useAppContext } from "../context/AppContext";
 import ThemeToggler from "../ThemeToggler";
+import { useLocation } from "react-router-dom";
 import Select from "react-select";
 
-export const Rome = () => {
-    const { theme } = useContext(ThemeContext); 
-    const [pokemons, setPokemons] = useState([]);
-    const [offset, setOffset] = useState(0);
-    const [selectedType, setSelectedType] = useState("");
-    const [pokemonTypes, setPokemonTypes] = useState([]);
-    const [showBackToTen, setShowBackToTen] = useState(false);
+const Home = () => {
+  const { theme } = useContext(ThemeContext); // para controlar o tema
+  const [pokemons, setPokemons] = useState([]); //armazana a lista de pokemons
+  const [offset, setOffset] = useState(0);
+  const [pokemonTypes, setPokemonTypes] = useState([]); //armazenará a lista de pokemons por tipo
+  const [selectedType, setSelectedType] = useState(""); // armazena o tipo de pokemon escolhido
+  const [showBackToTen, setShowBackToTen] = useState(false); //Botão volta para 10 - inicia invisível
+  const [showLoadMore, setShowLoadMore] = useState(true); //Botão volta para 10 - inicia invisível
+  const { isFirstLoad, setIsFirstLoad } = useAppContext(); // Usando o contexto global
+  const [Qtde, setQtde] = useState(10);
+  const [savedPokemons, setSavedPokemons] = useState([]);
 
-    const customStyles = {
-        control: (base) => ({
-            ...base,
-            backgroundColor: theme === "dark" ? "#333" : "#fff",
-            color: theme === "dark" ? "#fff" : "#333",
-            borderColor: theme === "dark" ? "#555" : "#ccc",
-            boxShadow: "none",
-            "&:hover": {
-                borderColor: theme === "dark" ? "#777" : "#888",
-            },
-        }),
-        singleValue: (base) => ({
-            ...base,
-            color: theme === "dark" ? "#fff" : "#333",
-        }),
-        menu: (base) => ({
-            ...base,
-            backgroundColor: theme === "dark" ? "#444" : "#fff",
-        }),
-        option: (base, { isFocused }) => ({
-            ...base,
-            backgroundColor: isFocused ? (theme === "dark" ? "#555" : "#eee") : "transparent",
-            color: theme === "dark" ? "#fff" : "#333",
-        }),
-    };
+  useEffect(() => {
+    console.log("Iniciando o carregamento...");
+    fetchPokemonTypes();
+  
+    if (isFirstLoad) {
+      console.log("Executando o primeiro carregamento...");
+      localStorage.removeItem("selectedType");
+      localStorage.removeItem("offset");
+      localStorage.removeItem("returningFromDetails");
+      console.log("Primeiro carregamento", pokemons)
+      setSelectedType(""); // "All Types"
+      setOffset(0);
+      fetchPokemons(0).then((initialPokemons) => {
+        setSavedPokemons(initialPokemons);
+        setPokemons(initialPokemons);
+        localStorage.setItem("pokemons", JSON.stringify(initialPokemons));
+        console.log("Pokémons carregados no primeiro carregamento:", initialPokemons);
+        setIsFirstLoad(false);
+      });
+    } else {
+      console.log("Voltando de detalhes...");
+      const savedType = localStorage.getItem("selectedType");
+      const savedPokemons = JSON.parse(localStorage.getItem("pokemons")) || [];
+  
+      if (savedPokemons.length > 0) {
+        console.log("Pokémons recuperados do localStorage:", savedPokemons);
+        setSavedPokemons(savedPokemons);
+        setPokemons(savedPokemons);
+        setShowBackToTen(true); 
+      } else {
+        console.warn("Erro ao recuperar Pokémons. LocalStorage vazio ou inconsistente.");
+      }
+      setSelectedType(savedType || "");
+    }
+  }, []); 
 
-    const fetchPokemons = async (newOffset = 0, isLoadMore = false) => {
-        try {
-            const response = await axios.get(
-                `https://pokeapi.co/api/v2/pokemon?limit=10&offset=${newOffset}`
-            );
+  // Função para buscar Pokémon por tipo
+  const fetchPokemonsByType = async (type, newOffset = 0) => {
+    try {
+      const response = await axios.get(`https://pokeapi.co/api/v2/type/${type}`);
+      const pokemonsOfType = response.data.pokemon
+        .slice(newOffset, newOffset + 10)
+        .map((p) => p.pokemon);
+      setPokemons((prev) => (newOffset === 0 ? pokemonsOfType : [...prev, ...pokemonsOfType]));
+      setOffset(newOffset + 10);
+      // Exibe o botão "Back to Ten" se não estiver no início
+      setShowBackToTen(newOffset > 0);
+    } catch (error) {
+      console.error("Erro ao carregar Pokémons por tipo:", error);
+    }
+  };
 
-            const pokemonData = await Promise.all(
-                response.data.results.map(async (pokemon) => {
-                    const details = await axios.get(pokemon.url);
-                    return {
-                        name: details.data.name,
-                        image: details.data.sprites.front_default,
-                        id: details.data.id,
-                    };
-                })
-            );
+  const fetchPokemons = async (currentLength) => {
+    try {
+      // Verifica se é o primeiro carregamento
+      if (isFirstLoad) {
 
-            if (isLoadMore) {
-                setPokemons((prev) => [...prev, ...pokemonData]);
-            } else {
-                setPokemons(pokemonData);
-            }
-        } catch (error) {
-            console.error("Erro ao buscar Pokémon", error);
-        }
-    };
+        const response = await axios.get(
+          `https://pokeapi.co/api/v2/pokemon?limit=10&offset=0` // Primeiro carregamento usa offset 0
+        );
+        const newPokemons = response.data.results || []; // Garante que nunca será vazio
 
-    const fetchPokemonsByType = async (type, newOffset = 0, isLoadMore = false) => {
-        try {
-            const response = await axios.get(
-                `https://pokeapi.co/api/v2/type/${type}`
-            );
-            const allPokemonOfType = response.data.pokemon.map((p) => p.pokemon);
+        setPokemons(newPokemons);
+        setSavedPokemons(newPokemons);
+        localStorage.setItem("pokemons", JSON.stringify(newPokemons));
+        console.log("Primeiro carregamento json:", newPokemons);
+        return newPokemons; // Retorna os Pokémons carregados
+      } else {
+        console.log("Carregando mais Pokémons...");
 
-            if (allPokemonOfType.length === 0) {
-                setPokemons([]);
-                return;
-            }
+        const response = await axios.get(
+          `https://pokeapi.co/api/v2/pokemon?limit=10&offset=${currentLength}`
+        );
+        const newPokemons = response.data.results || []; // Garante que nunca será vazio
 
-            const selectedPokemons = allPokemonOfType.slice(
-                newOffset,
-                newOffset + 10
-            );
+        console.log("Novos Pokémons carregados:", newPokemons);
+        return newPokemons; // Retorna os Pokémons carregados
+      }
+    } catch (error) {
+      console.error("Erro ao carregar os Pokémons:", error);
+      return []; // Retorna um array vazio em caso de erro
+    }
+  };
 
-            const pokemonData = await Promise.all(
-                selectedPokemons.map(async (pokemon) => {
-                    const details = await axios.get(pokemon.url);
-                    return {
-                        name: details.data.name,
-                        image: details.data.sprites.front_default,
-                        id: details.data.id,
-                    };
-                })
-            );
+  // Função para buscar tipos de Pokémon e seus ícones  
+  const fetchPokemonTypes = async () => {
+    try {
+      const response = await axios.get("https://pokeapi.co/api/v2/type");
+      const types = response.data.results.map((type) => ({
+        value: type.name,
+        label: (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <img
+              src={`/${type.name.charAt(0).toUpperCase() + type.name.slice(1)}_Type.png`}
+              alt={type.name}
+              style={{ width: "20px", marginRight: "8px" }}
+            />
+            {type.name.charAt(0).toUpperCase() + type.name.slice(1)}
+          </div>
+        ),
+      }));
+      setPokemonTypes(types);
+    } catch (error) {
+      console.error("Erro ao carregar os tipos de Pokémon:", error);
+    }
+  };
 
-            if (isLoadMore) {
-                setPokemons((prev) => [...prev, ...pokemonData]);
-            } else {
-                setPokemons(pokemonData);
-            }
-        } catch (error) {
-            console.error("Erro ao buscar Pokémon por tipo", error);
-        }
-    };
+  const handleTypeChange = (selectedOption) => {
+    const type = selectedOption ? selectedOption.value : "";
+    setSelectedType(type);
+    setOffset(0);
+    setShowBackToTen(false);
+    setPokemons([]);
+    
+    if (type) {
+      // Se houver tipo selecionado, chamamos o fetch por tipo
+      fetchPokemonsByType(type, 0).then((newPokemons) => {
+        setPokemons(newPokemons);
+        // Atualize também o savedPokemons, se for necessário para outras funções
+        setSavedPokemons(newPokemons);
+        
+        // Cria um objeto com todas as informações a serem salvas
+        const appState = { selectedType: type, pokemons: newPokemons, offset: 0 };
+        localStorage.setItem("appState", JSON.stringify(appState));
+      });
+    } else {
+      // Se não houver tipo, chamamos o fetch normal
+      fetchPokemons(0).then((newPokemons) => {
+        setPokemons(newPokemons);
+        setSavedPokemons(newPokemons);
+        
+        const appState = { selectedType: "", pokemons: newPokemons, offset: 0 };
+        localStorage.setItem("appState", JSON.stringify(appState));
+      });
+    }
+  };
 
-    useEffect(() => {
-        fetchPokemonTypes();
-    }, []);
+  const loadMorePokemons = () => {
+    if (selectedType === "") {
+      // Tamanho atual dos Pokémons carregados
+      let currentLength = savedPokemons.length;
+      // Busca mais 10 Pokémons do JSON e atualiza
+      fetchPokemons(currentLength).then((newPokemons) => {
+        const updatedPokemons = [...savedPokemons, ...newPokemons]; // Adiciona os novos
+        setSavedPokemons(updatedPokemons); // Atualiza o estado global (JSON completo)
+        localStorage.setItem("pokemons", JSON.stringify(updatedPokemons)); // Salva no localStorage
+        setPokemons(updatedPokemons); // Atualiza os renderizados
+        console.log("Pokémons carregados após Load More:", updatedPokemons); // Debug
+        setShowBackToTen(true); 
+      });
+    } else {
+      console.log("Em construção hehe")
+    }
 
-    // Função para buscar tipos de Pokémon e seus ícones  
-    const fetchPokemonTypes = async () => {
-        try {
-            const response = await axios.get("https://pokeapi.co/api/v2/type");
-            const types = response.data.results.map((type) => ({
-                value: type.name,
-                label: (
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                        <img
-                            src={`/${type.name.charAt(0).toUpperCase() + type.name.slice(1)}_Type.png`}
-                            alt={type.name}
-                            style={{ width: "20px", marginRight: "8px" }}
-                        />
-                        {type.name.charAt(0).toUpperCase() + type.name.slice(1)}
-                    </div>
-                ),
-            }));
-            setPokemonTypes(types);
-        } catch (error) {
-            console.error("Erro ao carregar os tipos de Pokémon:", error);
-        }
-    };
+  };
 
-    // useEffect(() => {
-    //   fetchPokemons(0);
-    // }, []);
+  const backToTen = () => {
+    if (selectedType === "") {
+      // Sem filtro: busca os primeiros 10
+      fetchPokemons(0).then((initialPokemons) => {
+        setSavedPokemons(initialPokemons);
+        setPokemons(initialPokemons);
+        localStorage.setItem("pokemons", JSON.stringify(initialPokemons));
+        console.log("Back to Ten (sem tipo):", initialPokemons);
+      });
+    } else {
+      // Com filtro: busca os primeiros 10 para o tipo selecionado
+      fetchPokemonsByType(selectedType, 0);
+    }
+    setShowBackToTen(false);
+  };
+  
 
-    useEffect(() => {
-        if (selectedType === "") {
-            fetchPokemons(0);
-        } else {
-            fetchPokemonsByType(selectedType, 0);
-        }
-        setOffset(0);
-    }, [selectedType]);
+  const customStyles = {
+    control: (base) => ({
+      ...base,
+      backgroundColor: theme === "dark" ? "#333" : "#fff",
+      color: theme === "dark" ? "#fff" : "#333",
+      borderColor: theme === "dark" ? "#555" : "#ccc",
+      boxShadow: "none",
+      "&:hover": {
+        borderColor: theme === "dark" ? "#777" : "#888",
+      },
+    }),
+    singleValue: (base) => ({
+      ...base,
+      color: theme === "dark" ? "#fff" : "#333",
+    }),
+    menu: (base) => ({
+      ...base,
+      backgroundColor: theme === "dark" ? "#444" : "#fff",
+    }),
+    option: (base, { isFocused }) => ({
+      ...base,
+      backgroundColor: isFocused ? (theme === "dark" ? "#555" : "#eee") : "transparent",
+      color: theme === "dark" ? "#fff" : "#333",
+    }),
+  };
 
-    const loadMorePokemons = () => {
-        const newOffset = offset + 10;
-        setOffset(newOffset);
-        if (selectedType === "") {
-            fetchPokemons(newOffset, true);
-        } else {
-            fetchPokemonsByType(selectedType, newOffset, true);
-        }
-    };
+  return (
+    <Container>
+      <h1>List of Pokémons</h1>
+      <Header>
+        <ThemeToggler />&nbsp;&nbsp;&nbsp;&nbsp;
+        <Select
+          options={pokemonTypes}
+          onChange={handleTypeChange}
+          value={pokemonTypes.find((option) => option.value === selectedType) || null}
+          placeholder="Select a type"
+          isClearable
+          styles={customStyles}
+        />
+      </Header>
+      <PokemonGrid>
+        {pokemons.length > 0 ? (
+          pokemons.map((pokemon, index) => (
+            <PokemonCard key={index} name={pokemon.name} url={pokemon.url} />
+          ))
+        ) : (
+          <p>Loading Pokémon...</p>
+        )}
+      </PokemonGrid>
+      <button onClick={() => { loadMorePokemons(); }}>Load More</button>
+      {showBackToTen && <button onClick={backToTen}>Back to Ten</button>}
 
-
-    return (
-        <Container>
-            <h1>List of Pokémons</h1>
-            <Header>
-                <ThemeToggler />
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <Select
-                    options={pokemonTypes}
-                    onChange={(option) => setSelectedType(option?.value || "")}
-                    value={pokemonTypes.find((option) => option.value === selectedType) || null}
-                    placeholder="Select a type"
-                    isClearable
-                    styles={customStyles}
-                />
-            </Header>
-            <PokemonGrid>
-                {pokemons.length > 0 ? (
-                    pokemons.map((pokemon, index) => (
-                        <PokemonCard key={index} name={pokemon.name} url={pokemon.url} />
-                    ))
-                ) : (
-                    <p>Loading Pokémon...</p>
-                )}
-            </PokemonGrid>
-            <button onClick={() => setOffset((prevOffset) => prevOffset + 10)}>Load More</button>
-            {showBackToTen && (
-                <button
-                    onClick={() => {
-                        setOffset(0);
-                        setPokemons([]);
-                    }}
-                >
-                    Back to Ten
-                </button>
-            )}
-        </Container>
-    );
+    </Container>
+  );
 };
 
-// Components estilizados antes do export
+export default Home;
+
 const Container = styled.div`
   text-align: center;
   padding: 20px;
@@ -205,10 +258,10 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
 
-  h1 {
-    @media (max-width: 480px) {
-      font-size: 28px;
-    }
+  h1{
+    @media (max-width: 480px){
+    font-size: 28px;
+  }
   }
 `;
 
@@ -235,7 +288,4 @@ const Header = styled.div`
   width: 100%;
   max-width: 1200px;
   margin-bottom: 20px;
-`;
-
-// Exportação final
-export default Rome;
+  `;
