@@ -17,6 +17,8 @@ const Home = () => {
   const { isFirstLoad, setIsFirstLoad } = useAppContext();  // Flag global para primeiro carregamento
   const [Qtde, setQtde] = useState(10);
   const [savedPokemons, setSavedPokemons] = useState([]);   // Lista completa armazenada
+  const [hasMore, setHasMore] = useState(true); // Começa com "true"
+
 
   // Atualiza o objeto de estado no localStorage usando a chave "appState"
   const updateAppState = (type, pokemonsList, currentOffset) => {
@@ -150,6 +152,10 @@ const Home = () => {
         updateAppState("", updatedPokemons, updatedPokemons.length);
         console.log("Pokémons carregados após Load More:", updatedPokemons);
         setShowBackToTen(true);
+        // Verifica se chegamos ao fim da lista de Pokémon
+        if (newPokemons.length === 0) {
+          setHasMore(false); // Não há mais Pokémon disponíveis
+        }
       });
     } else {
       const currentLength = savedPokemons.length;
@@ -161,6 +167,10 @@ const Home = () => {
         updateAppState(selectedType, updatedPokemons, updatedPokemons.length);
         console.log("Pokémons carregados após Load More (tipo selecionado):", updatedPokemons);
         setShowBackToTen(true);
+        // Verifica se chegamos ao fim da lista de Pokémon
+        if (newPokemons.length === 0) {
+          setHasMore(false); // Não há mais Pokémon para o tipo selecionado
+        }
       });
     }
   };
@@ -184,6 +194,7 @@ const Home = () => {
       });
     }
     setShowBackToTen(false);
+    setHasMore(true);
   };
 
   const customStyles = {
@@ -235,7 +246,11 @@ const Home = () => {
           <p>Loading Pokémon...</p>
         )}
       </PokemonGrid>
-      <button onClick={loadMorePokemons}>Load More</button>
+      {hasMore ? (
+        <button onClick={loadMorePokemons}>Load More</button>
+      ) : (
+        <button disabled style={{ opacity: 0.5 }}>There is no more Pokémons</button>
+      )}
       {showBackToTen && <button onClick={backToTen}>Back to Ten</button>}
     </Container>
   );
