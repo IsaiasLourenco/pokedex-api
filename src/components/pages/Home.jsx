@@ -46,12 +46,10 @@ const Home = () => {
   };
 
   useEffect(() => {
-    console.log("Iniciando o carregamento...");
     fetchPokemonTypes();
 
     const storedState = localStorage.getItem("appState");
     if (isFirstLoad || !storedState) {
-      console.log("Executando o primeiro carregamento...");
       // Limpa dados antigos (opcional: se quiser zerar todos os dados relacionados)
       localStorage.removeItem("appState");
       setSelectedType("");
@@ -60,11 +58,9 @@ const Home = () => {
         setSavedPokemons(initialPokemons);
         setPokemons(initialPokemons);
         updateAppState("", initialPokemons, 0);
-        console.log("Pokémons carregados no primeiro carregamento:", initialPokemons);
         setIsFirstLoad(false);
       });
     } else {
-      console.log("Voltando de detalhes...");
       restoreAppState();
     }
   }, []);
@@ -87,7 +83,6 @@ const Home = () => {
       }));
       setPokemonTypes(types);
     } catch (error) {
-      console.error("Erro ao carregar os tipos de Pokémon:", error);
     }
   };
 
@@ -97,10 +92,8 @@ const Home = () => {
         `https://pokeapi.co/api/v2/pokemon?limit=10&offset=${currentLength}`
       );
       const newPokemons = response.data.results || [];
-      console.log(currentLength === 0 ? "Primeiro carregamento json:" : "Novos Pokémons carregados:", newPokemons);
       return newPokemons;
     } catch (error) {
-      console.error("Erro ao carregar os Pokémons:", error);
       return [];
     }
   };
@@ -111,10 +104,8 @@ const Home = () => {
       const pokemonsOfType = response.data.pokemon
         .slice(newOffset, newOffset + 10)
         .map((p) => p.pokemon);
-      console.log(newOffset === 0 ? "Primeiro carregamento por tipo:" : "Novos Pokémons por tipo carregados:", pokemonsOfType);
       return pokemonsOfType;
     } catch (error) {
-      console.error("Erro ao carregar Pokémons por tipo:", error);
       return [];
     }
   };
@@ -150,7 +141,6 @@ const Home = () => {
         setPokemons(updatedPokemons);
         setOffset(updatedPokemons.length);
         updateAppState("", updatedPokemons, updatedPokemons.length);
-        console.log("Pokémons carregados após Load More:", updatedPokemons);
         setShowBackToTen(true);
         // Verifica se chegamos ao fim da lista de Pokémon
         if (newPokemons.length === 0) {
@@ -165,7 +155,6 @@ const Home = () => {
         setPokemons(updatedPokemons);
         setOffset(updatedPokemons.length);
         updateAppState(selectedType, updatedPokemons, updatedPokemons.length);
-        console.log("Pokémons carregados após Load More (tipo selecionado):", updatedPokemons);
         setShowBackToTen(true);
         // Verifica se chegamos ao fim da lista de Pokémon
         if (newPokemons.length === 0) {
@@ -182,7 +171,6 @@ const Home = () => {
         setPokemons(initialPokemons);
         setOffset(initialPokemons.length);
         updateAppState("", initialPokemons, initialPokemons.length);
-        console.log("Back to Ten (sem tipo):", initialPokemons);
       });
     } else {
       fetchPokemonsByType(selectedType, 0).then((newPokemons) => {
@@ -190,7 +178,6 @@ const Home = () => {
         setPokemons(newPokemons);
         setOffset(newPokemons.length);
         updateAppState(selectedType, newPokemons, newPokemons.length);
-        console.log("Back to Ten (com tipo):", newPokemons);
       });
     }
     setShowBackToTen(false);

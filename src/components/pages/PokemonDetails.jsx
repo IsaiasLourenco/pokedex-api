@@ -1,8 +1,8 @@
-import { useParams, useNavigate } from "react-router-dom"; 
 import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
-import { AbilityItem } from "../styles/GlobalStyles"; 
+import { AbilityItem } from "../styles/GlobalStyles";
 import GlobalStyles from "../styles/GlobalStyles";
 import Description from "../Description";
 
@@ -10,7 +10,7 @@ const PokemonDetails = () => {
   const { id } = useParams();
   const [pokemon, setPokemon] = useState(null);
   const [offset, setOffset] = useState(0);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch detalhes do Pokémon pelo ID
@@ -18,8 +18,20 @@ const PokemonDetails = () => {
       setPokemon(res.data);
     });
   }, [id]);
-  
+
   if (!pokemon) return <h2>Carregando...</h2>;
+
+  // Lógica de tratamento de erro
+  const handleError = (e) => {
+    const id = e.target.src.split("/")[e.target.src.split("/").length - 1].split(".")[0];
+    if (e.target.src.endsWith(".gif")) {
+      // Se o GIF falhar, tenta carregar o PNG
+      e.target.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+    } else {
+      // Se o PNG também falhar, usa um placeholder
+      e.target.src = "https://via.placeholder.com/100?text=No+Image";
+    }
+  };
 
   // Função para voltar à página inicial
   const handleBackClick = () => {
@@ -28,9 +40,6 @@ const PokemonDetails = () => {
     const savedPokemons = JSON.parse(localStorage.getItem("pokemons")) || [];
     if (savedPokemons.length > 0) {
       localStorage.setItem("pokemons", JSON.stringify(savedPokemons));
-      console.log("Pokemons salvos antes de voltar", savedPokemons)
-    } else {
-      console.warn("Nenhum Pokémon encontrado pra salvar");
     }
     // Passa o estado atual para a página inicial ao navegar de volta
     navigate("/", {
@@ -43,11 +52,12 @@ const PokemonDetails = () => {
 
   return (
     <>
-      <GlobalStyles /> 
+      <GlobalStyles />
       <Container>
         <img
           src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${pokemon.id}.gif`}
           alt={pokemon.name}
+          onError={handleError}
         />
         <h1>{pokemon.name}</h1>
 
@@ -87,7 +97,9 @@ const PokemonDetails = () => {
         </DetailsContainer>
 
         {/* Botão de voltar */}
-        <button className="back-button" onClick={handleBackClick}>← Back</button>
+        <button className="back-button" onClick={handleBackClick}>
+          ← Back
+        </button>
       </Container>
     </>
   );
@@ -113,19 +125,19 @@ const Container = styled.div`
   }
 
   img {
-    cursor: default; 
-    outline: none; 
+    cursor: default;
+    outline: none;
   }
 `;
 
 const DetailsContainer = styled.div`
   display: flex;
-  justify-content: space-around; 
-  gap: 20px; 
+  justify-content: space-around;
+  gap: 20px;
   margin-top: 20px;
 
   div {
-    width: 30%; 
+    width: 30%;
     text-align: left;
   }
 
