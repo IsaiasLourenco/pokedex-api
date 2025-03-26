@@ -23,7 +23,9 @@ Aplicativo feito com base na Quest de React Avançado do curso DevQuest DevEmDob
     - 4. O Switcher vai ser responsável por trocar o tema, Dark e Light, aberto a novos temas no futuro, como o tema do Sistema Operacional em atual uso;
     - 5. Dentro dos cards carregados na tela, ao clicar em uma dessas telas, o card do Pokémon escolhido abre PokemonDetails.jsx, mostrando os detalhes desse Pokémon, e o detalhe agora está na próxima funcinalidade;
     - 6. Quando no PokemonDetails.jsx, ao clicar no botão "Back", a página Home.jsx deve voltar SEMPRE apresentando a mesma tela que existia quando o card foi clicado, ou seja, os mesmos Pokémons, por tipo, e a mesma quantia, 10 ou mais mostradas na tela inicial quando clicado o card;
-    - 7. O botão "Back to ten" assim como o "Back" do PokemonDetails.jsx deve voltar aos 10 primeiros mas respeitando o select de tipo.
+    - 7. O botão "Back to ten" assim como o "Back" do PokemonDetails.jsx deve voltar aos 10 primeiros mas respeitando o select de tipo;
+    - 8. Ao chegar no final da lista, se não houver mais nenhum card de Pokemon para ser mostrado, o botão "Load More" mostra o texto "There is no more Pokemons", e ao clicar no botão "Back To Ten", ele volta aos 10 Pokemons iniciais e o botão volta a se chamar "Load More";
+    - 9. Os GIF's dos cards e do PokemonDetails.jsx são todos tratados, pois alguns lá no final não tem GIF, nesse caso existe um fall back para buscar PNG em seu lugar, e se também não houver PNG ele simplesmente mostra um Placeholder.
 
 ## Linguagens/Ferramentas utilizadas
 
@@ -66,10 +68,20 @@ Aplicativo feito com base na Quest de React Avançado do curso DevQuest DevEmDob
 - Agradecimentos ao pessoal do DevEmDobro
 - Agradecimentos ao Pablo Viana por ajudar a entender alguns problemas da versão 18 e 19 do React https://github.com/pablovianas
 
-## Reposítório e Linkedin
+## Repositório e Linkedin (Isaias Lourenço)
 
 ✅ https://github.com/IsaiasLourenco<br>
 ✅ https://www.linkedin.com/in/isaias-lourenco/
+
+## Repositório Pokédex e link do projeto em produção
+
+<a href="https://isaiaslourenco-pokedex.vercel.app/">
+  <img src="./public/pikachu.ico" alt="Favicon" width="15" height="15">
+</a>
+  
+  https://isaiaslourenco-pokedex.vercel.app/
+
+💻 https://github.com/IsaiasLourenco/pokedex-ap 
 
 <img src="./public/pokemonApi.gif" alt="DeliveringAPI">
 
